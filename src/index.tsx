@@ -1,12 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { Store } from "redux";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import "bootstrap/dist/css/bootstrap.min.css";
+import App from "./App";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import configureStore from "./store";
+import { IAppState } from "./model";
+import { getAllFilms } from "./actions/MoviesActions";
+
+interface IProps {
+  store: Store<IAppState>;
+}
+
+const Root: React.SFC<IProps> = props => {
+  return (
+    <Provider store={props.store}>
+      <App />
+    </Provider>
+  );
+};
+
+// Generate the store
+const store = configureStore();
+store.dispatch(getAllFilms());
+
+// Render the App
+ReactDOM.render(<Root store={store} />, document.getElementById(
+  "root"
+) as HTMLElement);
