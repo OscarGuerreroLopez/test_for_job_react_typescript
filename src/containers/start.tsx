@@ -1,30 +1,33 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { IAppState } from "../model";
-import { IFilm } from "../model";
+import { IAppState, IMoviesProps } from "../model";
 
-interface IProps {
-  films: IFilm[];
-}
+import { MovieTable } from "../components/moviesTable";
 
-class Start extends Component<IProps> {
+import { Loading } from "../components/loading";
+
+import { ErrorPage } from "../components/error";
+
+class Start extends Component<IMoviesProps> {
   render() {
-    const { films } = this.props;
+    const { films, loading, error } = this.props;
+
     return (
       <>
         <div className="jumbotron text-center">
           <h1>Star Wars Movies</h1>
         </div>
         <div className="name-container">
-          {films &&
-            films.map(film => {
-              return (
-                <span key={film.title} className="name">
-                  {film.title}
-                </span>
-              );
-            })}
+          {loading ? (
+            error ? (
+              <ErrorPage />
+            ) : (
+              <Loading />
+            )
+          ) : (
+            <MovieTable films={films} />
+          )}
         </div>
       </>
     );
@@ -33,7 +36,9 @@ class Start extends Component<IProps> {
 
 const mapStateToProps = (store: IAppState) => {
   return {
-    films: store.filmState.films
+    films: store.filmState.films,
+    loading: store.filmState.loading,
+    error: store.filmState.error
   };
 };
 

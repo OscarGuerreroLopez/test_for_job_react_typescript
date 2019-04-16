@@ -18,10 +18,14 @@ export interface IFilm {
 
 export interface IFilmState {
   readonly films: IFilm[];
+  loading: boolean;
+  error: boolean;
 }
 
 export const initialFilmState: IFilmState = {
-  films: []
+  films: [],
+  loading: false,
+  error: false
 };
 export interface IAppState {
   filmState: IFilmState;
@@ -29,7 +33,8 @@ export interface IAppState {
 
 export enum FilmActionTypes {
   GET_FILMS_PENDING = "GET_FILMS_PENDING",
-  GET_ALL = "GET_ALL"
+  GET_ALL = "GET_ALL",
+  GET_FILMS_ERROR = "GET_FILMS_ERROR"
 }
 
 export interface IFilmGetAllAction {
@@ -42,4 +47,19 @@ export interface IFilmLoading {
   loading: boolean;
 }
 
-export type AllActions = IFilmGetAllAction | IFilmLoading;
+export interface IFilmError {
+  type: FilmActionTypes.GET_FILMS_ERROR;
+  error: boolean;
+}
+
+export interface IMoviesProps {
+  films: IFilm[];
+  loading: boolean;
+  error: boolean;
+}
+
+export interface IMovieTableProps {
+  films: IFilm[];
+}
+
+export type AllActions = IFilmGetAllAction | IFilmLoading | IFilmError;
