@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { IAppState, IMoviesProps } from "../model";
 
-import { MovieTable } from "../components/moviesTable";
+import MovieTable from "../components/moviesTable";
 
 import { Loading } from "../components/loading";
 
