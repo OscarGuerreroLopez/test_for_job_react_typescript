@@ -6,6 +6,8 @@ import { ConvertDate } from "../functions/convert_date";
 
 interface State {
   movieTable: IFilm[];
+  searchName: string;
+  pageNumbers: number[];
 }
 
 class MovieTable extends Component<IMovieTableProps, State> {
@@ -13,7 +15,11 @@ class MovieTable extends Component<IMovieTableProps, State> {
     super(props);
 
     this.state = {
-      movieTable: this.giveMeMovies(this.films)
+      movieTable: this.giveMeMovies(this.films),
+      searchName: "",
+      pageNumbers: Array(Math.ceil(this.films.length / this.moviesPerPage))
+        .fill(0)
+        .map((x, i) => i + 1)
     };
   }
 
@@ -22,13 +28,10 @@ class MovieTable extends Component<IMovieTableProps, State> {
   pageSelected = 1;
   pageIndex = (this.pageSelected - 1) * this.moviesPerPage;
 
-  pageNumbers = Array(Math.ceil(this.films.length / this.moviesPerPage))
-    .fill(0)
-    .map((x, i) => i + 1);
-
   changePage = (newPage: number) => {
     this.pageIndex = (newPage - 1) * this.moviesPerPage;
     this.setState({
+      ...this.state,
       movieTable: this.giveMeMovies(this.films)
     });
   };
@@ -37,9 +40,60 @@ class MovieTable extends Component<IMovieTableProps, State> {
     return films.slice(this.pageIndex, this.pageIndex + this.moviesPerPage);
   };
 
+  onNameChange = (evt: any) => {
+    this.setState({
+      ...this.state,
+      searchName: evt.target.value
+    });
+
+    let count = evt.target.value.length;
+    let movieTableSearch: IFilm[] = [];
+
+    this.films.map(movie => {
+      // console.log(evt.target.value.toLocaleLowerCase());
+      // console.log(movie.title.substring(0, count).toLocaleLowerCase());
+
+      if (
+        movie.title.substring(0, count).toLocaleLowerCase() ===
+        evt.target.value.toLocaleLowerCase()
+      ) {
+        movieTableSearch.push(movie); // maybe better to use spread operator
+        this.setState({
+          ...this.state,
+          movieTable: this.giveMeMovies(movieTableSearch),
+          pageNumbers: Array(
+            Math.ceil(movieTableSearch.length / this.moviesPerPage)
+          )
+            .fill(0)
+            .map((x, i) => i + 1)
+        });
+      }
+    });
+  };
+
   render() {
     return (
       <div className="container-fluid">
+        {/* ******************************************************* */}
+        <div className="input-group input-group-lg">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="inputGroup-sizing-lg">
+              Movie search, start typing:
+            </span>
+          </div>
+          <input
+            type="text"
+            className="form-control"
+            aria-label="Large"
+            aria-describedby="inputGroup-sizing-sm"
+            placeholder="Movie Name"
+            ref="name"
+            onChange={this.onNameChange}
+          />
+        </div>
+        <br />
+        {/* ******************************************************* */}
+
         <table className="table">
           <thead className="thead-dark">
             <tr>
@@ -62,7 +116,7 @@ class MovieTable extends Component<IMovieTableProps, State> {
           </tbody>
         </table>
         <div className="btn-group float-right">
-          {this.pageNumbers.map((page, index) => {
+          {this.state.pageNumbers.map((page, index) => {
             return (
               <button
                 className="btn btn-outline-primary"
