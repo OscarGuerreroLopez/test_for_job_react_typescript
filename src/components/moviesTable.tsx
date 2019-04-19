@@ -6,63 +6,76 @@ import { ConvertDate } from "../functions/convert_date";
 
 interface State {
   movieTable: IFilm[];
-  searchName: string;
   pageNumbers: number[];
 }
 
 class MovieTable extends Component<IMovieTableProps, State> {
+  films = this.props.films;
+  moviesPerPage = 5;
+  pageSelected = 1;
+  pageIndex = (this.pageSelected - 1) * this.moviesPerPage;
+  movieTableSearch: IFilm[] = [];
+
+  // ************************************************************************************
+  // *************************************Constructor************************************
+
   constructor(props: IMovieTableProps) {
     super(props);
 
     this.state = {
       movieTable: this.giveMeMovies(this.films),
-      searchName: "",
       pageNumbers: Array(Math.ceil(this.films.length / this.moviesPerPage))
         .fill(0)
         .map((x, i) => i + 1)
     };
   }
 
-  films = this.props.films;
-  moviesPerPage = 5;
-  pageSelected = 1;
-  pageIndex = (this.pageSelected - 1) * this.moviesPerPage;
+  // ************************************************************************************
+  // ***************************When user clicks on the page number**********************
 
   changePage = (newPage: number) => {
     this.pageIndex = (newPage - 1) * this.moviesPerPage;
-    this.setState({
-      ...this.state,
-      movieTable: this.giveMeMovies(this.films)
-    });
+    console.log(this.movieTableSearch.length);
+
+    // if nothing has been entered in th search box make sure you load original movies
+    // else load the search table
+    if (this.movieTableSearch.length === 0) {
+      this.setState({
+        ...this.state,
+        movieTable: this.giveMeMovies(this.films)
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        movieTable: this.giveMeMovies(this.movieTableSearch)
+      });
+    }
   };
+
+  // ************************************************************************************
 
   giveMeMovies = (films: IFilm[]) => {
     return films.slice(this.pageIndex, this.pageIndex + this.moviesPerPage);
   };
 
-  onNameChange = (evt: any) => {
-    this.setState({
-      ...this.state,
-      searchName: evt.target.value
-    });
+  // ************************************************************************************
 
+  onNameChange = (evt: any) => {
     let count = evt.target.value.length;
-    let movieTableSearch: IFilm[] = [];
+
+    this.movieTableSearch = [];
 
     this.films.map(movie => {
-      // console.log(evt.target.value.toLocaleLowerCase());
-      // console.log(movie.title.substring(0, count).toLocaleLowerCase());
-
       if (
         movie.title.substring(0, count).toLocaleLowerCase() ===
         evt.target.value.toLocaleLowerCase()
       ) {
-        movieTableSearch.push(movie); // maybe better to use spread operator
+        this.movieTableSearch.push(movie); // maybe better to use spread operator
         this.setState({
           ...this.state,
-          movieTable: this.giveMeMovies(movieTableSearch),
+          movieTable: this.giveMeMovies(this.movieTableSearch),
           pageNumbers: Array(
-            Math.ceil(movieTableSearch.length / this.moviesPerPage)
+            Math.ceil(this.movieTableSearch.length / this.moviesPerPage)
           )
             .fill(0)
             .map((x, i) => i + 1)
@@ -70,6 +83,8 @@ class MovieTable extends Component<IMovieTableProps, State> {
       }
     });
   };
+
+  // ************************************************************************************
 
   render() {
     return (
