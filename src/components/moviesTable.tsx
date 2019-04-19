@@ -7,6 +7,7 @@ import { ConvertDate } from "../functions/convert_date";
 interface State {
   movieTable: IFilm[];
   pageNumbers: number[];
+  pageSelected: number;
 }
 
 class MovieTable extends Component<IMovieTableProps, State> {
@@ -26,7 +27,8 @@ class MovieTable extends Component<IMovieTableProps, State> {
       movieTable: this.giveMeMovies(this.films),
       pageNumbers: Array(Math.ceil(this.films.length / this.moviesPerPage))
         .fill(0)
-        .map((x, i) => i + 1)
+        .map((x, i) => i + 1),
+      pageSelected: 1
     };
   }
 
@@ -41,12 +43,14 @@ class MovieTable extends Component<IMovieTableProps, State> {
     if (this.movieTableSearch.length === 0) {
       this.setState({
         ...this.state,
-        movieTable: this.giveMeMovies(this.films)
+        movieTable: this.giveMeMovies(this.films),
+        pageSelected: newPage
       });
     } else {
       this.setState({
         ...this.state,
-        movieTable: this.giveMeMovies(this.movieTableSearch)
+        movieTable: this.giveMeMovies(this.movieTableSearch),
+        pageSelected: newPage
       });
     }
   };
@@ -84,30 +88,42 @@ class MovieTable extends Component<IMovieTableProps, State> {
   };
 
   // ************************************************************************************
+  // ******************************Movie selected:***************************************
+  selectedMovie(movie: IFilm) {
+    console.log(movie);
+  }
+  // ************************************************************************************
 
   render() {
     return (
       <div className="container-fluid">
         {/* ******************************************************* */}
-        <div className="input-group input-group-lg">
-          <div className="input-group-prepend">
-            <span className="input-group-text" id="inputGroup-sizing-lg">
-              Movie search, start typing:
-            </span>
+        {this.state.pageSelected === 1 ? (
+          <div className="input-group input-group-lg">
+            <div className="input-group-prepend">
+              <span className="input-group-text" id="inputGroup-sizing-lg">
+                Movie search, start typing:
+              </span>
+            </div>
+            <input
+              type="text"
+              className="form-control"
+              aria-label="Large"
+              aria-describedby="inputGroup-sizing-sm"
+              placeholder="Movie Name"
+              ref="name"
+              onChange={this.onNameChange}
+            />
           </div>
-          <input
-            type="text"
-            className="form-control"
-            aria-label="Large"
-            aria-describedby="inputGroup-sizing-sm"
-            placeholder="Movie Name"
-            ref="name"
-            onChange={this.onNameChange}
-          />
-        </div>
+        ) : (
+          <div />
+        )}
+
         <br />
         {/* ******************************************************* */}
-
+        <div className="container text-center">
+          <h4>Click on a movie to see the details:</h4>
+        </div>
         <table className="table">
           <thead className="thead-dark">
             <tr>
@@ -120,7 +136,7 @@ class MovieTable extends Component<IMovieTableProps, State> {
             {this.state.movieTable &&
               this.state.movieTable.map(film => {
                 return (
-                  <tr key={film.title}>
+                  <tr key={film.title} onClick={() => this.selectedMovie(film)}>
                     <th scope="row">{film.title}</th>
                     <td>{film.director}</td>
                     <td>{ConvertDate(film.release_date)}</td>
