@@ -35,7 +35,6 @@ class MovieTable extends Component<IMovieTableProps, State> {
 
   changePage = (newPage: number) => {
     this.pageIndex = (newPage - 1) * this.moviesPerPage;
-    console.log(this.movieTableSearch.length);
 
     // if nothing has been entered in th search box make sure you load original movies
     // else load the search table
