@@ -4,11 +4,34 @@ import { IMovieTableProps, IFilm } from "../model";
 
 import { ConvertDate } from "../functions/convert_date";
 
+import { getMovie as getMovieAction } from "../actions/MoviesActions";
+
+import { ThunkDispatch } from "redux-thunk";
+
+import { connect } from "react-redux";
+
 interface State {
   movieTable: IFilm[];
   pageNumbers: number[];
   pageSelected: number;
 }
+
+// const initialMovie: IFilm = {
+//   title: "",
+//   episode_id: 0,
+//   opening_crawl: "",
+//   director: "",
+//   producer: "",
+//   release_date: "",
+//   characters: [],
+//   planets: [],
+//   starships: [],
+//   vehicles: [],
+//   species: [],
+//   created: "",
+//   edited: "",
+//   url: ""
+// };
 
 class MovieTable extends Component<IMovieTableProps, State> {
   films = this.props.films;
@@ -91,6 +114,8 @@ class MovieTable extends Component<IMovieTableProps, State> {
   // ******************************Movie selected:***************************************
   selectedMovie(movie: IFilm) {
     console.log(movie);
+
+    this.props.getMovie(movie);
   }
   // ************************************************************************************
 
@@ -163,4 +188,15 @@ class MovieTable extends Component<IMovieTableProps, State> {
   }
 }
 
-export default MovieTable;
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+  return {
+    getMovie: (movie: IFilm) => {
+      return dispatch(getMovieAction(movie));
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(MovieTable);

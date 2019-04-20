@@ -5,6 +5,7 @@ Redux Thunk middleware allows you to write action creators that return a functio
 import thunk from "redux-thunk";
 // Import reducers and state type
 import { filmReducer } from "../reducers/filmReducer";
+import { movieReducer } from "../reducers/movieReducer";
 import { IAppState } from "../model";
 
 import { createLogger } from "redux-logger";
@@ -16,7 +17,8 @@ import { createLogger } from "redux-logger";
 
 // Create the root reducer
 const rootReducer = combineReducers<IAppState>({
-  filmState: filmReducer
+  filmState: filmReducer,
+  movieState: movieReducer
 });
 
 const logger = createLogger({
