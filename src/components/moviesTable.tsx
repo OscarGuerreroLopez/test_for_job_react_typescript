@@ -16,23 +16,6 @@ interface State {
   pageSelected: number;
 }
 
-// const initialMovie: IFilm = {
-//   title: "",
-//   episode_id: 0,
-//   opening_crawl: "",
-//   director: "",
-//   producer: "",
-//   release_date: "",
-//   characters: [],
-//   planets: [],
-//   starships: [],
-//   vehicles: [],
-//   species: [],
-//   created: "",
-//   edited: "",
-//   url: ""
-// };
-
 class MovieTable extends Component<IMovieTableProps, State> {
   films = this.props.films;
   moviesPerPage = 5;
@@ -96,7 +79,7 @@ class MovieTable extends Component<IMovieTableProps, State> {
         movie.title.substring(0, count).toLocaleLowerCase() ===
         evt.target.value.toLocaleLowerCase()
       ) {
-        this.movieTableSearch.push(movie); // maybe better to use spread operator
+        this.movieTableSearch = [...this.movieTableSearch, movie];
         this.setState({
           ...this.state,
           movieTable: this.giveMeMovies(this.movieTableSearch),
@@ -113,8 +96,6 @@ class MovieTable extends Component<IMovieTableProps, State> {
   // ************************************************************************************
   // ******************************Movie selected:***************************************
   selectedMovie(movie: IFilm) {
-    console.log(movie);
-
     this.props.getMovie(movie);
   }
   // ************************************************************************************
