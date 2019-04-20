@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "@reach/router";
 
 import { IMovieTableProps, IFilm } from "../model";
 
@@ -143,7 +144,10 @@ class MovieTable extends Component<IMovieTableProps, State> {
               this.state.movieTable.map(film => {
                 return (
                   <tr key={film.title} onClick={() => this.selectedMovie(film)}>
-                    <th scope="row">{film.title}</th>
+                    <th scope="row">
+                      <Link to="/movie">{film.title}</Link>
+                    </th>
+
                     <td>{film.director}</td>
                     <td>{ConvertDate(film.release_date)}</td>
                   </tr>

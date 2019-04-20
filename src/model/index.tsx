@@ -108,6 +108,12 @@ export interface IMoviesProps {
   error: boolean;
 }
 
+export interface IMovieProps {
+  movie: IMovie;
+  loading: boolean;
+  error: boolean;
+}
+
 export interface IMovieTableProps {
   films: IFilm[];
   getMovie: (movie: IFilm) => {};
