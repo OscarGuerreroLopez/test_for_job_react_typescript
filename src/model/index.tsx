@@ -1,4 +1,3 @@
-// Define the Film type
 export interface IFilm {
   title: string;
   episode_id: number;

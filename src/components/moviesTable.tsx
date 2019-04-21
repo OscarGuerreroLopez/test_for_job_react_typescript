@@ -69,6 +69,7 @@ class MovieTable extends Component<IMovieTableProps, State> {
   };
 
   // ************************************************************************************
+  // ****************************When User types on search box***************************
 
   onNameChange = (evt: any) => {
     let count = evt.target.value.length;
@@ -104,7 +105,7 @@ class MovieTable extends Component<IMovieTableProps, State> {
   render() {
     return (
       <div className="container-fluid">
-        {/* ******************************************************* */}
+        {/* *********************Search box*************************** */}
         {this.state.pageSelected === 1 ? (
           <div className="input-group input-group-lg">
             <div className="input-group-prepend">
@@ -127,7 +128,7 @@ class MovieTable extends Component<IMovieTableProps, State> {
         )}
 
         <br />
-        {/* ******************************************************* */}
+        {/* *******************Table******************************** */}
         <div className="container text-center">
           <h4>Click on a movie to see the details:</h4>
         </div>
@@ -155,6 +156,8 @@ class MovieTable extends Component<IMovieTableProps, State> {
               })}
           </tbody>
         </table>
+        {/* ****************Page Numbers******************************* */}
+
         <div className="btn-group float-right">
           {this.state.pageNumbers.map((page, index) => {
             return (
