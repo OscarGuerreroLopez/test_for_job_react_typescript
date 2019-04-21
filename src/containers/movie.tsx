@@ -11,14 +11,12 @@ import { Right } from "../components/right";
 
 class Movie extends Component<IMovieProps, {}> {
   render() {
+    console.log(this.props);
+
     const { movie, loading, error } = this.props;
-    console.log(movie);
-    console.log(loading);
-    console.log(error);
 
     return (
       <div className="container-fluid text-center">
-        <h2>Movie details</h2>
         {loading ? (
           error ? (
             <ErrorPage />
@@ -27,13 +25,22 @@ class Movie extends Component<IMovieProps, {}> {
           )
         ) : (
           <div className="container text-center">
+            <h2>{movie.title} details</h2>
             <div className="container">
               <div className="row">
                 <div className="col-sm">
-                  <Left />
+                  <Left
+                    info={{
+                      director: movie.director,
+                      producer: movie.producer,
+                      opening: movie.opening_crawl,
+                      date: movie.release_date
+                    }}
+                  />
                 </div>
+
                 <div className="col-sm">
-                  <Right />
+                  <Right characters={movie.characters} />
                 </div>
               </div>
             </div>
