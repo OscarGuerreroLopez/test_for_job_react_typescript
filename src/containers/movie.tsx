@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { navigate } from "@reach/router";
+
 import { IAppState, IMovieProps } from "../model";
 
 import { Loading } from "../components/loading";
@@ -10,9 +12,14 @@ import { Left } from "../components/left";
 import { Right } from "../components/right";
 
 class Movie extends Component<IMovieProps, {}> {
-  render() {
-    console.log(this.props);
+  goBack = () => {
+    navigate("start");
+  };
+  goHome = () => {
+    navigate("/");
+  };
 
+  render() {
     const { movie, loading, error } = this.props;
 
     return (
@@ -25,7 +32,18 @@ class Movie extends Component<IMovieProps, {}> {
           )
         ) : (
           <div className="container text-center">
+            <div className="d-flex justify-content-center">
+              <button
+                type="button"
+                className="btn btn-info"
+                onClick={this.goBack}
+              >
+                Back to movie list
+              </button>
+            </div>
+
             <h2>{movie.title} details</h2>
+
             <div className="container">
               <div className="row">
                 <div className="col-sm">
